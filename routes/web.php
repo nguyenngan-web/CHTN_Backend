@@ -27,11 +27,11 @@ Route::get('/test-db', function () {
             'message' => 'Kết nối Database thành công!',
             'database' => $dbName
         ]);
-    } catch (\Exception $e) {
+    } catch (\Throwable $e) {
         return response()->json([
             'status' => 'error',
             'message' => 'Không thể kết nối Database!',
             'error' => $e->getMessage()
-        ], 500);
+        ], 200);
     }
 });
