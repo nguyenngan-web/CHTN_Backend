@@ -66,6 +66,10 @@ php artisan storage:link --force
 echo "--> Running database migrations..."
 php artisan migrate --force
 
+# 5. Seed database (chỉ chạy nếu chưa có data)
+echo "--> Seeding database..."
+php artisan db:seed --force
+
 # 5. Clear cached configuration to ensure environment variables are read dynamically
 echo "--> Clearing configuration cache..."
 php artisan config:clear
