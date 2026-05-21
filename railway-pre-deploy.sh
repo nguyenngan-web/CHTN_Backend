@@ -56,7 +56,7 @@ try {
 
 # 2. Run migrations
 echo "--> Running database migrations..."
-php artisan migrate --seed --force
+# php artisan migrate --seed --force
 
 # 3. Clear cached configuration to ensure environment variables are read dynamically
 echo "--> Clearing configuration cache..."
