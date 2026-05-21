@@ -54,18 +54,27 @@ try {
 }
 '
 
-# 2. Run migrations
-echo "--> Running database migrations..."
-# php artisan migrate --seed --force
+# 2. Set storage permissions
+echo "--> Setting storage permissions..."
+chmod -R 775 storage bootstrap/cache || true
 
-# 3. Clear cached configuration to ensure environment variables are read dynamically
+# 3. Create storage symlink
+echo "--> Creating storage symlink..."
+php artisan storage:link --force
+
+# 4. Run migrations
+echo "--> Running database migrations..."
+php artisan migrate --force
+
+# 5. Clear cached configuration to ensure environment variables are read dynamically
 echo "--> Clearing configuration cache..."
 php artisan config:clear
 php artisan route:clear
 php artisan view:clear
 
-# 4. Re-cache routes and views for production performance
-echo "--> Caching routes and views..."
+# 6. Re-cache config, routes, and views for production performance
+echo "--> Caching config, routes, and views..."
+php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 

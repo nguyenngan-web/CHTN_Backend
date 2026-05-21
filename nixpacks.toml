@@ -10,6 +10,8 @@ nixPkgs = [
   "php82Extensions.fileinfo",
   "php82Extensions.bcmath",
   "php82Extensions.curl",
+  "php82Extensions.openssl",
+  "php82Extensions.gd",
   "composer"
 ]
 
@@ -20,4 +22,4 @@ cmds = [
 ]
 
 [start]
-cmd = "bash railway-pre-deploy.sh && frankenphp php-server --root=public/ --listen=:${PORT:-8080}"
+cmd = "bash railway-pre-deploy.sh && frankenphp php-server --root=public/ --listen=:${PORT:-8080}"
