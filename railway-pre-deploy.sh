@@ -15,11 +15,11 @@ try {
     $app = require_once __DIR__ . "/bootstrap/app.php";
     $app->make(Illuminate\Contracts\Console\Kernel::class)->bootstrap();
 
-    $host = env("MYSQLHOST", env("DB_HOST", "127.0.0.1"));
-    $port = env("MYSQLPORT", env("DB_PORT", "3306"));
-    $db = env("MYSQLDATABASE", env("DB_DATABASE"));
-    $user = env("MYSQLUSER", env("DB_USERNAME"));
-    $pass = env("MYSQLPASSWORD", env("DB_PASSWORD"));
+    $host = env("DB_HOST", env("MYSQLHOST", "127.0.0.1"));
+    $port = env("DB_PORT", env("MYSQLPORT", "3306"));
+    $db = env("DB_DATABASE", env("MYSQLDATABASE"));
+    $user = env("DB_USERNAME", env("MYSQLUSER"));
+    $pass = env("DB_PASSWORD", env("MYSQLPASSWORD"));
 
     echo "Diagnostic Details:\n";
     echo "  - Host: " . $host . "\n";
@@ -34,10 +34,19 @@ try {
     }
 
     echo "Attempting raw PDO connection...\n";
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db", $user, $pass, [
+    $options = [
         PDO::ATTR_TIMEOUT => 5,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    ];
+    if (env("MYSQL_ATTR_SSL_CA")) {
+        $options[PDO::MYSQL_ATTR_SSL_CA] = env("MYSQL_ATTR_SSL_CA");
+    }
+    $sslVerify = env("DB_SSL_VERIFY", true);
+    if ($sslVerify === "false" || $sslVerify === false) {
+        $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+    }
+    
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db", $user, $pass, $options);
     echo "SUCCESS: Raw database connection established!\n";
 } catch (\Exception $e) {
     echo "ERROR: Database connection failed!\n";
